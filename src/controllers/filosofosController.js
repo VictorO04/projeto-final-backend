@@ -19,11 +19,22 @@ export const getFilosofoPeloId = async (req, res) => {
     });
 }
 
-export const postFilosofos = async (req, res) => {
+export const postFilosofo = async (req, res) => {
     const filosofo = await filosofosModel.criarFilosofo(req.body);
 
     res.status(201).json({
         mensagem: "Filósofo criado com sucesso",
+        filosofo
+    });
+}
+
+export const deleteFilosofo = async (req, res) => {
+    const id = Number(req.params.id);
+    
+    const filosofo = await filosofosModel.deletarFilosofo(id);
+
+    res.json({
+        mensagem: "Filósofo deletado com sucesso",
         filosofo
     });
 }
