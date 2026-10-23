@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Noticia {
+  id               Int      @id @default(autoincrement())
+  titulo           String
+  resumo           String
+  conteudoCompleto String   @db.Text
+  dataPublicacao   DateTime
+  fonte            String
+  urlImagem        String?
+  urlNoticia       String   @unique
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("noticias")
+}
+
+model Filosofo {
+  id                Int       @id @default(autoincrement())
+  nome              String    @unique
+  descricao         String
+  periodoHistorico  String
+  areaEstudo        String
+  correntePrincipal String
+  dataNascimento    DateTime?
+  dataFalescimento  DateTime?
+  urlImagem         String?
+
+  obras Obra[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("filosofos")
+}
+
+model Obra {
+  id             Int       @id @default(autoincrement())
+  titulo         String
+  resumo         String
+  tipo           String
+  dataPublicacao DateTime?
+  dataComposicao DateTime?
+  urlImagem      String?
+
+  filosofoId Int
+  filosofo Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+  
+  @@map("obras")
+}
