@@ -9,11 +9,21 @@ export const getFilosofos = async (req, res) => {
     });
 }
 
-    export const postFilosofos = async (req, res) => {
-        const filosofo = await filosofosModel.criarFilosofo(req.body);
+export const getFilosofoPeloId = async (req, res) => {
+    const id = Number(req.params.id);
+    
+    const filosofo = await filosofosModel.buscarFilosofoPorId(id);
 
-        res.status(201).json({
-            mensagem: "Filósofo criado com sucesso",
-            filosofo
-        });
-    }
+    res.json({
+        filosofo
+    });
+}
+
+export const postFilosofos = async (req, res) => {
+    const filosofo = await filosofosModel.criarFilosofo(req.body);
+
+    res.status(201).json({
+        mensagem: "Filósofo criado com sucesso",
+        filosofo
+    });
+}

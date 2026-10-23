@@ -5,6 +5,24 @@ export const buscarFilosofos = () => {
     return prisma.filosofo.findMany();
 }
 
+export const buscarFilosofoPorId = async (id) => {
+    if (id <= 0 || isNaN(id) || !Number.isInteger(id)) {
+        throw new AppError("O ID precisa ser um número inteiro positivo", 400);
+    }
+
+    const filosofo = await prisma.filosofo.findUnique({
+        where: {
+            id: id
+        }
+    });
+
+    if (!filosofo) {
+        throw new AppError(`Filosofo com o ID ${id} não encontrado`, 404);
+    }
+
+    return filosofo;
+}
+
 export const criarFilosofo = async (body) => {
     
     if (!body) {

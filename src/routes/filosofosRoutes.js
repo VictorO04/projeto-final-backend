@@ -4,6 +4,7 @@ import * as filosofosController from "../controllers/filosofosController.js";
 const router = Router();
 
 router.get("/", filosofosController.getFilosofos);
+router.get("/:id", filosofosController.getFilosofoPeloId);
 router.post("/", filosofosController.postFilosofos);
 
 export default router;
