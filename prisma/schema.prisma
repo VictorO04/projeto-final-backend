@@ -52,10 +52,10 @@ model Obra {
   urlImagem      String?
 
   filosofoId Int
-  filosofo Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
+  filosofo   Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
 
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
-  
+
   @@map("obras")
 }
