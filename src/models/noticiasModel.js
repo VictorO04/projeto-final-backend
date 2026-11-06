@@ -1,4 +1,4 @@
-import prisma from '../lib/services/prismaClient.js';
+import { prisma } from "../lib/prisma.js";
 
 export default class noticiasModel {
     constructor({ id = null, titulo, resumo, conteudoCompleto, dataPublicacao, fonte, urlImagem, urlNoticia } = {}) {
@@ -18,8 +18,9 @@ export default class noticiasModel {
                 titulo: this.titulo,
                 resumo: this.resumo,
                 conteudoCompleto: this.conteudoCompleto,
-                dataPublicacao: this.dataPublicacao,
+                dataPublicacao: new Date(this.dataPublicacao),
                 fonte: this.fonte,
+                urlImagem: this.urlImagem,
                 urlNoticia: this.urlNoticia
             },
         });
@@ -28,12 +29,12 @@ export default class noticiasModel {
     async atualizar() {
         return prisma.noticia.update({
             where: { id: this.id },
-            data: { titulo: this.titulo, resumo: this.resumo, conteudoCompleto: this.conteudoCompleto, dataPublicacao: this.dataPublicacao, fonte: this.fonte, urlNoticia: this.urlNoticia },
+            data: { titulo: this.titulo, resumo: this.resumo, conteudoCompleto: this.conteudoCompleto, dataPublicacao: this.dataPublicacao ? new Date(this.dataPublicacao) : undefined, fonte: this.fonte, urlNoticia: this.urlNoticia },
         });
     }
 
     async deletar() {
-        return prisma.usuario.delete({ where: { id: this.id } });
+        return prisma.noticia.delete({ where: { id: this.id } });
     }
 
     static async buscarTodos(filtros = {}) {
@@ -49,7 +50,7 @@ export default class noticiasModel {
             where.conteudoCompleto = filtros.conteudoCompleto;
         }
         if (filtros.dataPublicacao !== undefined) {
-            where.dataPublicacao = filtros.dataPublicacao;
+            where.dataPublicacao = new Date(this.dataPublicacao)
         }
         if (filtros.fonte !== undefined) {
             where.fonte = filtros.fonte;
