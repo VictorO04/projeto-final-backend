@@ -1,3 +1,4 @@
+import obrasRoutes from "./routes/obrasRoutes.js";
 import express from "express";
 import "dotenv/config";
 import erroMiddleware from "./middlewares/erroMiddleware.js";
@@ -14,6 +15,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/filosofos", filosofosRoutes);
+app.use("/api/obras", obrasRoutes);
 app.use("/api/noticias", noticiasRoutes);
 
 app.use((req, res) => {

@@ -1,7 +1,7 @@
-import prisma from '../lib/services/prismaClient.js';
+import prisma from '../lib/prisma.js';
 
 export default class obrasModel {
-    constructor({ id = null, titulo, resumo, tipo, dataPublicacao, dataComposicao, urlImagem } = {}) {
+    constructor({ id = null, titulo, resumo, tipo, dataPublicacao, dataComposicao, urlImagem, filosofoId } = {}) {
         this.id = id;
         this.titulo = titulo;
         this.resumo = resumo;
@@ -9,6 +9,7 @@ export default class obrasModel {
         this.dataPublicacao = dataPublicacao;
         this.dataComposicao = dataComposicao;
         this.urlImagem = urlImagem;
+        this.filosofoId = filosofoId;
     }
 
     async criar() {
@@ -19,6 +20,8 @@ export default class obrasModel {
                 tipo: this.tipo,
                 dataPublicacao: this.dataPublicacao,
                 dataComposicao: this.dataComposicao,
+                urlImagem: this.urlImagem,
+                filosofoId: this.filosofoId,
             },
         });
     }
@@ -26,12 +29,19 @@ export default class obrasModel {
     async atualizar() {
         return prisma.obra.update({
             where: { id: this.id },
-            data: { titulo: this.titulo, resumo: this.resumo, tipo: this.tipo, dataPublicacao: this.dataPublicacao, dataComposicao: this.dataComposicao },
+            data: {
+                titulo: this.titulo,
+                resumo: this.resumo,
+                tipo: this.tipo,
+                dataPublicacao: this.dataPublicacao,
+                dataComposicao: this.dataComposicao,
+                urlImagem: this.urlImagem,
+            },
         });
     }
 
     async deletar() {
-        return prisma.usuario.delete({ where: { id: this.id } });
+        return prisma.obra.delete({ where: { id: this.id } });
     }
 
     static async buscarTodos(filtros = {}) {
@@ -53,7 +63,7 @@ export default class obrasModel {
             where.dataComposicao = filtros.dataComposicao;
         }
 
-        return prisma.obra.fidMany({ where });
+        return prisma.obra.findMany({ where });
     }
 
     static async buscarPorId(id) {

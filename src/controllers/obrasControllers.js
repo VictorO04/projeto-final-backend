@@ -6,7 +6,15 @@ export const criar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const { titulo, resumo, tipo, dataPublicacao, dataComposicao, urlImagem } = req.body;
+        const {
+            titulo,
+            resumo,
+            tipo,
+            dataPublicacao,
+            dataComposicao,
+            urlImagem,
+            filosofoId
+        } = req.body;
 
         if (!titulo || typeof titulo !== 'string' || !titulo.trim()) {
             return res.status(400).json({ error: 'O campo "titulo" é obrigatório' });
@@ -20,15 +28,29 @@ export const criar = async (req, res) => {
         if (!tipo || typeof tipo !== 'string') {
             return res.status(400).json({ error: 'O campo "tipo" é obrigatório!'});
         }
-        if (!dataPublicacao || typeof dataPublicacao !== "DateTime") {
-            return res.status(400).json({ error: 'O campo "Data de publicação" é obrigatório'});
+        if (dataPublicacao && isNaN(Date.parse(dataPublicacao))) {
+            return res.status(400).json({ error: 'dataPublicacao deve ser uma data válida.' });
         }
-        if (!dataComposicao || typeof dataComposicao !== "DateTime") {
-            return res.status(400).json({ error: 'O campo "Data de Composição" é obrigatório'});
+
+        if (dataComposicao && isNaN(Date.parse(dataComposicao))) {
+            return res.status(400).json({ error: 'dataComposicao deve ser uma data válida.' });
         }
-        if (urlImagem || typeof urlImagem !== 'string') {
-            return res.status(400).json({ error: 'O campo "URL" é obrigatório!' });
+        if (urlImagem !== undefined && urlImagem !== null && typeof urlImagem !== 'string') {
+            return res.status(400).json({ error: 'urlImagem deve ser um texto.' });
         }
+        if (!filosofoId || typeof filosofoId !== 'number' || filosofoId <= 0) {
+            return res.status(400).json({ error: 'O campo "filosofoId" é obrigatório e deve ser um número positivo.' });
+        }
+
+        const obra = new obrasModel({
+            titulo,
+            resumo,
+            tipo,
+            dataPublicacao: dataPublicacao ? new Date(dataPublicacao) : null,
+            dataComposicao: dataComposicao ? new Date(dataComposicao) : null,
+            urlImagem,
+            filosofoId
+        });
 
         const data = await obra.criar();
 
@@ -56,7 +78,7 @@ export const buscarTodos = async (req, res) => {
 
 export const buscarPorId = async (req, res) => {
     try {
-        const { id } = req.prams;
+        const { id } = req.params;
 
         if (isNaN(id)) {
             return res.status(400).json({ erro: 'O ID enviado não é um número válido.' });
@@ -68,7 +90,7 @@ export const buscarPorId = async (req, res) => {
             return res.status(404).json({ erro: 'Registro não encontrado.' });
         }
 
-        return res.status(200).json({ data: usuario });
+        return res.status(200).json({ data: obra });
     } catch (error) {
         console.error('Erro ao buscar:', error);
         return res.status(500).json({ error: 'Erro ao buscar registro.' });
@@ -80,10 +102,10 @@ export const atualizar = async (req, res) => {
         const { id } = req.params;
 
         if (isNaN(id)) {
-            return res.status(400).json({ error: 'ID inválido.'});
+            return res.status(400).json({ error: 'ID inválido.' });
         }
 
-        if (!req.body) {
+        if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
@@ -94,23 +116,27 @@ export const atualizar = async (req, res) => {
         }
 
         if (req.body.titulo !== undefined) {
-            usuario.titulo = req.body.titulo;
+            obra.titulo = req.body.titulo;
         }
 
         if (req.body.resumo !== undefined) {
-            usuario.resumo = req.body.resumo;
+            obra.resumo = req.body.resumo;
         }
 
         if (req.body.tipo !== undefined) {
-            usuario.tipo = req.body.tipo;
+            obra.tipo = req.body.tipo;
         }
 
         if (req.body.dataPublicacao !== undefined) {
-            usuario.dataPublicacao = req.body.dataPublicacao;
+            obra.dataPublicacao = new Date(req.body.dataPublicacao);
         }
 
         if (req.body.dataComposicao !== undefined) {
-            usuario.dataComposicao = req.body.dataComposicao;
+            obra.dataComposicao = new Date(req.body.dataComposicao);
+        }
+
+        if (req.body.urlImagem !== undefined) {
+            obra.urlImagem = req.body.urlImagem;
         }
 
         const data = await obra.atualizar();
@@ -138,7 +164,7 @@ export const deletar = async (req, res) => {
 
         await obra.deletar();
 
-        return res.status(200).json({ message: `O registro "${usurio.obra}" foi deletado com sucesso!` });
+        return res.status(200).json({ message: `O registro "${obra.titulo}" foi deletado com sucesso!` });
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });
