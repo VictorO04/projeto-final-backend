@@ -24,7 +24,6 @@ export const buscarFilosofoPorId = async (id) => {
 }
 
 export const criarFilosofo = async (body) => {
-    
     if (!body) {
         throw new AppError("O corpo da requisição está faltando", 400);
     }
@@ -74,19 +73,7 @@ export const criarFilosofo = async (body) => {
 }
 
 export const deletarFilosofo = async (id) => {
-    if (id <= 0 || isNaN(id) || !Number.isInteger(id)) {
-        throw new AppError("O ID precisa ser um número inteiro positivo", 400);
-    }
-
-    const filosofo = await prisma.filosofo.findUnique({
-        where: {
-            id: id
-        }
-    });
-
-    if (!filosofo) {
-        throw new AppError(`Filosofo com o ID ${id} não encontrado`, 404);
-    }
+    const filosofo = await buscarFilosofoPorId(id);
 
     await prisma.filosofo.delete({
         where: {
