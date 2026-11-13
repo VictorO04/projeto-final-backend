@@ -1,12 +1,12 @@
 import express from "express";
-import * as controller from "../controllers/obrasControllers.js";
+import * as obrasControllers from "../controllers/obrasControllers.js";
 
 const router = express.Router();
 
-router.post("/", controller.criar);
-router.get("/", controller.buscarTodos);
-router.get("/:id", controller.buscarPorId);
-router.put("/:id", controller.atualizar);
-router.delete("/:id", controller.deletar);
+router.post("/", obrasControllers.criar);
+router.get("/", obrasControllers.buscarTodos);
+router.get("/:id", obrasControllers.buscarPorId);
+router.put("/:id", obrasControllers.atualizar);
+router.delete("/:id", obrasControllers.deletar);
 
 export default router;
