@@ -23,22 +23,40 @@ model Noticia {
   @@map("noticias")
 }
 
+model CorrenteFilosofica {
+  id        Int     @id @default(autoincrement())
+  nome      String  @unique
+  slug      String  @unique
+  descricao String? @db.Text
+
+  filosofos Filosofo[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("correntes_filosoficas")
+}
+
 model Filosofo {
-  id                Int       @id @default(autoincrement())
-  nome              String    @unique
-  descricao         String
-  periodoHistorico  String
-  areaEstudo        String
-  correntePrincipal String
-  dataNascimento    DateTime?
-  dataFalescimento  DateTime?
-  urlImagem         String?
+  id        Int     @id @default(autoincrement())
+  nome      String  @unique
+  slug      String  @unique
+  biografia String? @db.Text
+
+  dataNascimento  DateTime?
+  dataFalecimento DateTime?
+
+  imagem String?
+
+  correnteId Int?
+  corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id])
 
   obras Obra[]
 
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
 
+  @@index([correnteId])
   @@map("filosofos")
 }
 
@@ -61,13 +79,13 @@ model Obra {
 }
 
 model Video {
-  id Int @id @default(autoincrement())
+  id     Int     @id @default(autoincrement())
   titulo String
-  url String
+  url    String
   banner String?
 
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
-  
+
   @@map("videos")
 }

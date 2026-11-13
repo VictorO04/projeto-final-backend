@@ -89,7 +89,7 @@ export const atualizarFilosofo = async (body, id) => {
         throw new AppError("O corpo da requisição está faltando", 400);
     }
 
-    const filosofo = await buscarFilosofoPorId(id);
+    await buscarFilosofoPorId(id);
 
     const { nome, descricao, periodoHistorico, areaEstudo, correntePrincipal, dataNascimento, dataFalescimento, urlImagem } = body;
 
@@ -142,52 +142,49 @@ export const atualizarFilosofo = async (body, id) => {
             "filosofia da ciência",
             "filosofia da linguagem",
             "filosofia da mente",
-            "Filosofia da Religião",
-            "Filosofia do Direito",
-            "Filosofia da Educação",
-            "Filosofia Social",
-            "Filosofia da História"
+            "filosofia da Religião",
+            "filosofia do Direito",
+            "filosofia da Educação",
+            "filosofia Social",
+            "filosofia da História"
         ];
         const areaEstudoNormalizado = areaEstudo.trim().toLowerCase();
         const areaEstudoValido = areasEstudo.includes(areaEstudoNormalizado);
 
         if (!areaEstudoValido) {
-            throw new AppError(`Areas de estudo permitidas: ${areasEstudo.join(", ")}`, 400);
+            throw new AppError(`Áreas de estudo permitidas: ${areasEstudo.join(", ")}`, 400);
         }
     }
 
-
-
-
     if (correntePrincipal !== undefined) {
         if (typeof correntePrincipal !== "string") {
-            throw new AppError("O campo areaEstudo precisa ser do tipo string", 400);
+            throw new AppError("O campo correntePrincipal precisa ser do tipo string", 400);
         }
 
         const correntes = [
-            "Idealismo",
-            "Realismo",
-            "Racionalismo",
-            "Empirismo",
-            "Existencialismo",
-            "Estoicismo",
-            "Epicurismo",
-            "Ceticismo",
-            "Pragmatismo",
-            "Utilitarismo",
-            "Marxismo",
-            "Liberalismo",
-            "Niilismo",
-            "Fenomenologia",
-            "Hermenêutica",
-            "Positivismo",
-            "Estruturalismo",
-            "Pós-estruturalismo",
-            "Humanismo",
-            "Materialismo",
-            "Platonismo",
-            "Aristotelismo",
-            "Tomismo"
+            "idealismo",
+            "realismo",
+            "racionalismo",
+            "empirismo",
+            "existencialismo",
+            "estoicismo",
+            "epicurismo",
+            "ceticismo",
+            "pragmatismo",
+            "utilitarismo",
+            "marxismo",
+            "liberalismo",
+            "niilismo",
+            "fenomenologia",
+            "hermenêutica",
+            "positivismo",
+            "estruturalismo",
+            "pós-estruturalismo",
+            "humanismo",
+            "materialismo",
+            "platonismo",
+            "aristotelismo",
+            "tomismo"
         ];
 
         const correnteNormalizada = correntePrincipal.trim().toLowerCase();
@@ -195,6 +192,56 @@ export const atualizarFilosofo = async (body, id) => {
 
         if (!correnteValida) {
             throw new AppError(`Correntes permitidas: ${correntes.join(", ")}`, 400);
+        }
+    }
+
+    if (dataNascimento !== undefined) {
+        if (dataNascimento !== null && typeof dataNascimento !== "string") {
+            throw new AppError("O campo dataNascimento precisa ser uma string ou null", 400);
+        }
+
+        if (dataNascimento !== null) {
+            const data = new Date(dataNascimento);
+
+            if (isNaN(data.getTime())) {
+                throw new AppError("O campo dataNascimento precisa ser uma data válida", 400);
+            }
+
+            if (data > new Date()) {
+                throw new AppError("A data de nascimento não pode ser futura", 400);
+            }
+        }
+    }
+
+    if (dataFalescimento !== undefined) {
+        if (dataFalescimento !== null && typeof dataFalescimento !== "string") {
+            throw new AppError("O campo dataFalescimento precisa ser uma string ou null", 400);
+        }
+
+        if (dataFalescimento !== null) {
+            const data = new Date(dataFalescimento);
+
+            if (isNaN(data.getTime())) {
+                throw new AppError("O campo dataFalescimento precisa ser uma data válida", 400);
+            }
+
+            if (data > new Date()) {
+                throw new AppError("A data de falescimento não pode ser futura", 400);
+            }
+        }
+    }
+
+    if (urlImagem !== undefined) {
+        if (urlImagem !== null && typeof urlImagem !== "string") {
+            throw new AppError("O campo urlImagem precisa ser uma string ou null", 400);
+        }
+
+        if (urlImagem !== null) {
+            try {
+                new URL(urlImagem);
+            } catch {
+                throw new AppError("O campo urlImagem precisa ser uma URL válida", 400);
+            }
         }
     }
 }
