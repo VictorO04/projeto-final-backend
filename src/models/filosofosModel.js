@@ -128,20 +128,20 @@ export const atualizarFilosofo = async (body, id) => {
     }
 
     if (areaEstudo !== undefined) {
-        if (typeof periodoHistorico !== "string") {
+        if (typeof areaEstudo !== "string") {
             throw new AppError("O campo areaEstudo precisa ser do tipo string", 400);
         }
 
         const areasEstudo = [
-            "Metafísica",
-            "Ética",
-            "Epistemologia",
-            "Lógica",
-            "Estética",
-            "Filosofia Política",
-            "Filosofia da Ciência",
-            "Filosofia da Linguagem",
-            "Filosofia da Mente",
+            "metafísica",
+            "ética",
+            "epistemologia",
+            "lógica",
+            "estética",
+            "filosofia política",
+            "filosofia da ciência",
+            "filosofia da linguagem",
+            "filosofia da mente",
             "Filosofia da Religião",
             "Filosofia do Direito",
             "Filosofia da Educação",
@@ -160,7 +160,7 @@ export const atualizarFilosofo = async (body, id) => {
 
 
     if (correntePrincipal !== undefined) {
-        if (typeof periodoHistorico !== "string") {
+        if (typeof correntePrincipal !== "string") {
             throw new AppError("O campo areaEstudo precisa ser do tipo string", 400);
         }
 
