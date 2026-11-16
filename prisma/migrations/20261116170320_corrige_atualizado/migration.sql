@@ -1,0 +1,14 @@
+-- AlterTable
+ALTER TABLE "correntes_filosoficas" ALTER COLUMN "atualizadoEm" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "filosofos" ALTER COLUMN "atualizadoEm" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "noticias" ALTER COLUMN "atualizadoEm" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "obras" ALTER COLUMN "atualizadoEm" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "videos" ALTER COLUMN "atualizadoEm" SET DEFAULT CURRENT_TIMESTAMP;

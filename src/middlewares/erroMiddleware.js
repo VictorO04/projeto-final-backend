@@ -1,10 +1,15 @@
 const erroMiddleware = (error, req, res, next) => {
-    const mensagem = error.message || "Erro interno do servidor";
     const status = error.statusCode || 500;
 
-    if (status >= 500) console.error(error);
+    const mensagem = status >= 500
+        ? "Erro interno do servidor"
+        : error.message || "Erro interno do servidor";
 
-    res.status(status).json({ mensagem });
-}
+    if (status >= 500) {
+        console.error(error);
+    }
+
+    return res.status(status).json({ mensagem });
+};
 
 export default erroMiddleware;

@@ -18,7 +18,7 @@ model Noticia {
   urlNoticia       String   @unique
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  atualizadoEm DateTime @updatedAt @default(now())
 
   @@map("noticias")
 }
@@ -26,13 +26,12 @@ model Noticia {
 model CorrenteFilosofica {
   id        Int     @id @default(autoincrement())
   nome      String  @unique
-  slug      String  @unique
   descricao String? @db.Text
 
   filosofos Filosofo[]
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  atualizadoEm DateTime @updatedAt @default(now())
 
   @@map("correntes_filosoficas")
 }
@@ -40,7 +39,6 @@ model CorrenteFilosofica {
 model Filosofo {
   id        Int     @id @default(autoincrement())
   nome      String  @unique
-  slug      String  @unique
   biografia String? @db.Text
 
   dataNascimento  DateTime?
@@ -54,7 +52,7 @@ model Filosofo {
   obras Obra[]
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  atualizadoEm DateTime @updatedAt @default(now())
 
   @@index([correnteId])
   @@map("filosofos")
@@ -73,7 +71,7 @@ model Obra {
   filosofo   Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  atualizadoEm DateTime @updatedAt @default(now())
 
   @@map("obras")
 }
@@ -85,7 +83,7 @@ model Video {
   banner String?
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  atualizadoEm DateTime @updatedAt @default(now())
 
   @@map("videos")
 }
