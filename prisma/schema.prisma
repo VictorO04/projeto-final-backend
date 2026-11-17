@@ -7,19 +7,22 @@ datasource db {
   provider = "postgresql"
 }
 
+
 model Noticia {
   id               Int      @id @default(autoincrement())
   titulo           String
-  resumo           String
+  resumo           String   @db.Text
   conteudoCompleto String   @db.Text
-  dataPublicacao   DateTime
-  fonte            String
+  dataPublicacao   DateTime @db.Timestamptz(3)
+  tipo             String
   urlImagem        String?
   urlNoticia       String   @unique
 
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt @default(now())
 
+  @@index([dataPublicacao])
+  @@index([tipo])
   @@map("noticias")
 }
 
@@ -44,10 +47,10 @@ model Filosofo {
   dataNascimento  DateTime?
   dataFalecimento DateTime?
 
-  imagem String?
+  urlImagem String?
 
   correnteId Int?
-  corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id])
+  corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id], onDelete: SetNull)
 
   obras Obra[]
 
@@ -61,10 +64,10 @@ model Filosofo {
 model Obra {
   id             Int       @id @default(autoincrement())
   titulo         String
-  resumo         String
+  resumo         String @db.Text
   tipo           String
-  dataPublicacao DateTime?
-  dataComposicao DateTime?
+  dataPublicacao DateTime? @db.Date
+  dataComposicao DateTime? @db.Date
   urlImagem      String?
 
   filosofoId Int
@@ -73,6 +76,8 @@ model Obra {
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt @default(now())
 
+  @@index([filosofoId])
+  @@index([tipo])
   @@map("obras")
 }
 

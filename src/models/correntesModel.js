@@ -74,9 +74,7 @@ export const deletar = async (id) => {
     const correnteDeletada = await buscarPeloId(id);
 
     await prisma.correnteFilosofica.delete({
-        where: {
-            id: id
-        }
+        where: { id }
     });
 
     return correnteDeletada;
@@ -90,6 +88,10 @@ export const atualizar = async (id, body) => {
     }
 
     const { nome, descricao } = body;
+
+    if (nome === undefined && descricao === undefined) {
+        throw new AppError("Informe pelo menos um campo para atualizar", 400);
+    }
     
     if (nome !== undefined) {
         if (typeof nome !== "string") {
@@ -100,7 +102,7 @@ export const atualizar = async (id, body) => {
             throw new AppError("Nome não pode ser um texto vazio", 400);
         }
 
-        await validarNomeUnico(nome);
+        await validarNomeUnico(nome, id);
     }
     
     if (descricao !== undefined) {
