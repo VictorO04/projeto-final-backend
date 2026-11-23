@@ -18,7 +18,7 @@ model Noticia {
   urlNoticia       String   @unique
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@index([dataPublicacao])
   @@index([tipo])
@@ -31,9 +31,10 @@ model CorrenteFilosofica {
   descricao String? @db.Text
 
   filosofos Filosofo[]
+  questoes  Questao[]
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@map("correntes_filosoficas")
 }
@@ -51,10 +52,11 @@ model Filosofo {
   correnteId Int?
   corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id], onDelete: SetNull)
 
-  obras Obra[]
+  obras    Obra[]
+  questoes Questao[]
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@index([correnteId])
   @@map("filosofos")
@@ -63,7 +65,7 @@ model Filosofo {
 model Obra {
   id             Int       @id @default(autoincrement())
   titulo         String
-  resumo         String    @db.Text
+  resumo         String       @db.Text
   tipo           String
   dataPublicacao DateTime? @db.Date
   dataComposicao DateTime? @db.Date
@@ -72,8 +74,10 @@ model Obra {
   filosofoId Int
   filosofo   Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
 
+  questoes Questao[]
+
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@index([filosofoId])
   @@index([tipo])
@@ -87,7 +91,7 @@ model Video {
   banner String?
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@map("videos")
 }

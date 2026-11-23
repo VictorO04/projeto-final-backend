@@ -23,7 +23,7 @@ export const criar = async (req, res) => {
             return res.status(400).json({ error: 'O titulo deve ter no máximo 100 caracteres (incluindo espaços)!'});
         }
         if (!resumo || typeof resumo !== 'string') {
-            return res.status(400).json({ error: 'O campo "resumo" é obrigatório!' });
+            return res.status(400).json({ error: 'O campo "titulo" é obrigatório!' });
         }
         if (!tipo || typeof tipo !== 'string') {
             return res.status(400).json({ error: 'O campo "tipo" é obrigatório!'});
@@ -39,7 +39,7 @@ export const criar = async (req, res) => {
             return res.status(400).json({ error: 'urlImagem deve ser um texto.' });
         }
         if (!filosofoId || typeof filosofoId !== 'number' || filosofoId <= 0) {
-            return res.status(400).json({ error: 'O campo "filosofoId" é obrigatório e deve ser um número positivo.' });
+            return res.status(400).json({ error: 'O campo "id" é obrigatório e deve ser um número positivo.' });
         }
 
         const obra = new obrasModel({
@@ -49,7 +49,7 @@ export const criar = async (req, res) => {
             dataPublicacao: dataPublicacao ? new Date(dataPublicacao) : null,
             dataComposicao: dataComposicao ? new Date(dataComposicao) : null,
             urlImagem,
-            filosofoId: filosofoId
+            filosofoId: id
         });
 
         const data = await obra.criar();
