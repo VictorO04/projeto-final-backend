@@ -12,9 +12,6 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
     console.log('🌱 Resetando tabela noticia...');
 
-    // Remove todos os registros
-    // await prisma.noticias.deleteMany();
-
     console.log('📦 Inserindo novos registros...');
 
     await prisma.noticia.createMany({
