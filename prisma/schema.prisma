@@ -7,6 +7,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum NivelDificuldade {
+  FACIL
+  MEDIO
+  DIFICIL
+}
 
 model Noticia {
   id               Int      @id @default(autoincrement())
@@ -19,7 +24,7 @@ model Noticia {
   urlNoticia       String   @unique
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@index([dataPublicacao])
   @@index([tipo])
@@ -32,9 +37,10 @@ model CorrenteFilosofica {
   descricao String? @db.Text
 
   filosofos Filosofo[]
+  questoes  Questao[]
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@map("correntes_filosoficas")
 }
@@ -52,10 +58,11 @@ model Filosofo {
   correnteId Int?
   corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id], onDelete: SetNull)
 
-  obras Obra[]
+  obras    Obra[]
+  questoes Questao[]
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@index([correnteId])
   @@map("filosofos")
@@ -64,7 +71,7 @@ model Filosofo {
 model Obra {
   id             Int       @id @default(autoincrement())
   titulo         String
-  resumo         String @db.Text
+  resumo         String    @db.Text
   tipo           String
   dataPublicacao DateTime? @db.Date
   dataComposicao DateTime? @db.Date
@@ -73,8 +80,10 @@ model Obra {
   filosofoId Int
   filosofo   Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
 
+  questoes Questao[]
+
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@index([filosofoId])
   @@index([tipo])
@@ -88,7 +97,84 @@ model Video {
   banner String?
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
 
   @@map("videos")
+}
+
+model Simulado {
+  id          Int     @id @default(autoincrement())
+  titulo      String
+  descricao   String? @db.Text
+  tempoLimite Int? // Tempo sugerido em minutos (opcional)
+  publicado   Boolean @default(false)
+
+  questoes SimuladoQuestao[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
+
+  @@index([publicado])
+  @@map("simulados")
+}
+
+model Questao {
+  id          Int              @id @default(autoincrement())
+  enunciado   String           @db.Text
+  textoBase   String?          @db.Text // Citação ou trecho filosófico de apoio
+  fonteTexto  String? // Ex: "PLATÃO. A República. Livro VII."
+  urlImagem   String? // Para charges, tirinhas ou obras de arte
+  banca       String? // Ex: "ENEM", "FUVEST", "UNICAMP", "Autoral"
+  ano         Int? // Ex: 2024
+  dificuldade NivelDificuldade @default(MEDIO)
+  explicacao  String?          @db.Text // Gabarito comentado
+
+  correnteId Int?
+  corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id], onDelete: SetNull)
+
+  filosofoId Int?
+  filosofo   Filosofo? @relation(fields: [filosofoId], references: [id], onDelete: SetNull)
+
+  obraId Int?
+  obra   Obra? @relation(fields: [obraId], references: [id], onDelete: SetNull)
+
+  alternativas Alternativa[]
+  simulados    SimuladoQuestao[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @default(now()) @updatedAt
+
+  @@index([correnteId])
+  @@index([filosofoId])
+  @@index([obraId])
+  @@index([banca])
+  @@map("questoes")
+}
+
+model SimuladoQuestao {
+  id    Int @id @default(autoincrement())
+  ordem Int // Número da questão dentro deste simulado (1, 2, 3...)
+
+  simuladoId Int
+  simulado   Simulado @relation(fields: [simuladoId], references: [id], onDelete: Cascade)
+
+  questaoId Int
+  questao   Questao @relation(fields: [questaoId], references: [id], onDelete: Cascade)
+
+  @@unique([simuladoId, questaoId])
+  @@index([simuladoId])
+  @@index([questaoId])
+  @@map("simulado_questoes")
+}
+
+model Alternativa {
+  id      Int     @id @default(autoincrement())
+  texto   String  @db.Text
+  correta Boolean @default(false)
+
+  questaoId Int
+  questao   Questao @relation(fields: [questaoId], references: [id], onDelete: Cascade)
+
+  @@index([questaoId])
+  @@map("alternativas")
 }
