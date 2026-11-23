@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { prisma } from '../lib/prisma.js';
 import usuariosModel from '../models/usuariosModel.js';
+import jwt from "jsonwebtoken";
 
 export const cadastrar = async (req, res) => {
     try {
@@ -58,8 +59,15 @@ export const login = async (req, res) => {
             return res.status(401).json({ error: 'E-mail ou senha inválidos.' });
         }
 
+        const token = jwt.sign(
+            { id: usuario.id, email: usuario.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' }
+        );
+
         return res.status(200).json({
             message: 'Login realizado com sucesso!',
+            token,
             usuario: {
                 id: usuario.id,
                 nome: usuario.nome,
