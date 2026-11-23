@@ -6,6 +6,7 @@ import filosofosRoutes from "./routes/filosofosRoutes.js";
 import noticiasRoutes from "./routes/noticiasRoutes.js";
 import usuariosRoutes from "./routes/usuariosRoutes.js";
 import correntesRoutes from "./routes/correntesRoutes.js";
+import videosRoutes from "./routes/videosRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -21,6 +22,7 @@ app.use("/api/obras", obrasRoutes);
 app.use("/api/noticias", noticiasRoutes);
 app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/correntes-filosoficas", correntesRoutes);
+app.use("/api/videos", videosRoutes);
 
 app.use((req, res) => {
     res.status(404).json({
