@@ -1,9 +1,20 @@
-import { Router } from 'express';
-import { cadastrar, login } from '../controllers/usuariosController.js';
+import { Router } from "express";
+import {
+    cadastrar,
+    login,
+    buscarTodos,
+    buscarPorId,
+    atualizar,
+    deletar
+} from "../controllers/usuariosController.js";
 
 const router = Router();
 
-router.post('/', cadastrar);       // POST /usuarios
-router.post('/login', login);      // POST /usuarios/login
+router.get("/", buscarTodos);
+router.get("/:id", buscarPorId);
+router.post("/", cadastrar);
+router.post("/login", login);
+router.put("/:id", atualizar);
+router.delete("/:id", deletar);
 
 export default router;
