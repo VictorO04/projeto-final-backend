@@ -1,7 +1,7 @@
 import VideosModel from "../models/videosModel.js";
 
 export const getAllVideos = async (req, res) => {
-    const videos = await VideosModel.getAll();
+    const videos = await VideosModel.buscarTodos();
 
     res.json({
         total: videos.length,
@@ -11,7 +11,7 @@ export const getAllVideos = async (req, res) => {
 
 export const getVideoById = async (req, res) => {
     const id = Number(req.params.id);
-    const video = await VideosModel.getById(id);
+    const video = await VideosModel.buscaPorId(id);
 
     res.json({
         mensagem: `Vídeo com o ID ${id} encontrado`,
