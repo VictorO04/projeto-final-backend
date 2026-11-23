@@ -1,13 +1,13 @@
 import { prisma } from "../lib/prisma.js";
 
 export default class noticiasModel {
-    constructor({ id = null, titulo, resumo, conteudoCompleto, dataPublicacao, fonte, urlImagem, urlNoticia } = {}) {
+    constructor({ id = null, titulo, resumo, conteudoCompleto, tipo, dataPublicacao, urlImagem, urlNoticia } = {}) {
         this.id = id;
         this.titulo = titulo;
         this.resumo = resumo;
         this.conteudoCompleto = conteudoCompleto;
+        this.tipo = tipo;
         this.dataPublicacao = dataPublicacao;
-        this.fonte = fonte;
         this.urlImagem = urlImagem;
         this.urlNoticia = urlNoticia;
     }
@@ -18,8 +18,8 @@ export default class noticiasModel {
                 titulo: this.titulo,
                 resumo: this.resumo,
                 conteudoCompleto: this.conteudoCompleto,
+                tipo: this.tipo,
                 dataPublicacao: new Date(this.dataPublicacao),
-                fonte: this.fonte,
                 urlImagem: this.urlImagem,
                 urlNoticia: this.urlNoticia
             },
@@ -29,7 +29,15 @@ export default class noticiasModel {
     async atualizar() {
         return prisma.noticia.update({
             where: { id: this.id },
-            data: { titulo: this.titulo, resumo: this.resumo, conteudoCompleto: this.conteudoCompleto, dataPublicacao: this.dataPublicacao ? new Date(this.dataPublicacao) : undefined, fonte: this.fonte, urlNoticia: this.urlNoticia },
+            data: {
+                titulo: this.titulo,
+                resumo: this.resumo,
+                conteudoCompleto: this.conteudoCompleto,
+                tipo: this.tipo,
+                dataPublicacao: this.dataPublicacao ? new Date(this.dataPublicacao) : undefined,
+                urlImagem: this.urlImagem,
+                urlNoticia: this.urlNoticia
+            },
         });
     }
 
@@ -49,11 +57,11 @@ export default class noticiasModel {
         if (filtros.conteudoCompleto !== undefined) {
             where.conteudoCompleto = filtros.conteudoCompleto;
         }
-        if (filtros.dataPublicacao !== undefined) {
-            where.dataPublicacao = new Date(this.dataPublicacao)
+        if (filtros.tipo !== undefined) {
+            where.tipo = filtros.tipo;
         }
-        if (filtros.fonte !== undefined) {
-            where.fonte = filtros.fonte;
+        if (filtros.dataPublicacao !== undefined) {
+            where.dataPublicacao = new Date(filtros.dataPublicacao);
         }
         if (filtros.urlImagem !== undefined) {
             where.urlImagem = filtros.urlImagem;
