@@ -10,60 +10,93 @@ datasource db {
 model Noticia {
   id               Int      @id @default(autoincrement())
   titulo           String
-  resumo           String
+  resumo           String   @db.Text
   conteudoCompleto String   @db.Text
-  dataPublicacao   DateTime
+  dataPublicacao   DateTime @db.Timestamptz(3)
+  tipo             String
   urlImagem        String?
   urlNoticia       String   @unique
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  atualizadoEm DateTime @updatedAt @default(now())
 
+  @@index([dataPublicacao])
+  @@index([tipo])
   @@map("noticias")
 }
 
+model CorrenteFilosofica {
+  id        Int     @id @default(autoincrement())
+  nome      String  @unique
+  descricao String? @db.Text
+
+  filosofos Filosofo[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt @default(now())
+
+  @@map("correntes_filosoficas")
+}
+
 model Filosofo {
-  id                Int       @id @default(autoincrement())
-  nome              String    @unique
-  descricao         String
-  periodoHistorico  String
-  areaEstudo        String
-  correntePrincipal String
-  dataNascimento    DateTime?
-  dataFalescimento  DateTime?
-  urlImagem         String?
+  id        Int     @id @default(autoincrement())
+  nome      String  @unique
+  biografia String? @db.Text
+
+  dataNascimento  DateTime?
+  dataFalecimento DateTime?
+
+  urlImagem String?
+
+  correnteId Int?
+  corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id], onDelete: SetNull)
 
   obras Obra[]
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  atualizadoEm DateTime @updatedAt @default(now())
 
+  @@index([correnteId])
   @@map("filosofos")
 }
 
 model Obra {
   id             Int       @id @default(autoincrement())
   titulo         String
-  resumo         String
+  resumo         String    @db.Text
   tipo           String
-  dataPublicacao DateTime?
-  dataComposicao DateTime?
+  dataPublicacao DateTime? @db.Date
+  dataComposicao DateTime? @db.Date
   urlImagem      String?
 
   filosofoId Int
   filosofo   Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
 
   criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  atualizadoEm DateTime @updatedAt @default(now())
 
+  @@index([filosofoId])
+  @@index([tipo])
   @@map("obras")
+}
+
+model Video {
+  id     Int     @id @default(autoincrement())
+  titulo String
+  url    String
+  banner String?
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt @default(now())
+
+  @@map("videos")
 }
 
 model Usuario {
   id    Int    @id @default(autoincrement())
   nome  String
   email String @unique
-  senha String // Aqui será salvo o hash do bcrypt
+  senha String
 
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt @default(now())
