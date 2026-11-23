@@ -13,7 +13,6 @@ model Noticia {
   resumo           String
   conteudoCompleto String   @db.Text
   dataPublicacao   DateTime
-  fonte            String
   urlImagem        String?
   urlNoticia       String   @unique
 
@@ -58,4 +57,16 @@ model Obra {
   atualizadoEm DateTime @updatedAt
 
   @@map("obras")
+}
+
+model Usuario {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  email String @unique
+  senha String // Aqui será salvo o hash do bcrypt
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt @default(now())
+
+  @@map("usuarios")
 }

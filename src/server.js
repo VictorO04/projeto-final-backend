@@ -3,6 +3,7 @@ import "dotenv/config";
 import erroMiddleware from "./middlewares/erroMiddleware.js";
 import filosofosRoutes from "./routes/filosofosRoutes.js";
 import noticiasRoutes from "./routes/noticiasRoutes.js";
+import usuariosRoutes from './routes/usuariosRoutes.js';
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/filosofos", filosofosRoutes);
 app.use("/api/noticias", noticiasRoutes);
+app.use("/api/usuarios", usuariosRoutes);
 
 app.use((req, res) => {
     res.status(404).json({
