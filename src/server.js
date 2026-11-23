@@ -4,6 +4,7 @@ import "dotenv/config";
 import erroMiddleware from "./middlewares/erroMiddleware.js";
 import filosofosRoutes from "./routes/filosofosRoutes.js";
 import noticiasRoutes from "./routes/noticiasRoutes.js";
+import usuariosRoutes from "./routes/usuariosRoutes.js";
 import correntesRoutes from "./routes/correntesRoutes.js";
 
 const app = express();
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 app.use("/api/filosofos", filosofosRoutes);
 app.use("/api/obras", obrasRoutes);
 app.use("/api/noticias", noticiasRoutes);
+app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/correntes-filosoficas", correntesRoutes);
 
 app.use((req, res) => {

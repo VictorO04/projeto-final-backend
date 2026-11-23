@@ -7,7 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
 model Noticia {
   id               Int      @id @default(autoincrement())
   titulo           String
@@ -64,7 +63,7 @@ model Filosofo {
 model Obra {
   id             Int       @id @default(autoincrement())
   titulo         String
-  resumo         String @db.Text
+  resumo         String    @db.Text
   tipo           String
   dataPublicacao DateTime? @db.Date
   dataComposicao DateTime? @db.Date
@@ -91,4 +90,16 @@ model Video {
   atualizadoEm DateTime @updatedAt @default(now())
 
   @@map("videos")
+}
+
+model Usuario {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  email String @unique
+  senha String
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt @default(now())
+
+  @@map("usuarios")
 }
