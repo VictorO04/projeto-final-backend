@@ -119,11 +119,17 @@ export default class VideosModel {
         const videoNovo = await prisma.video.update({
             where: { id },
             data: {
-                titulo: this.titulo?.trim() || undefined,
-                url: this.url?.trim() || undefined,
-                banner: this.banner === undefined
-                    ? undefined
-                    : this.banner?.trim() || null
+                titulo: this.titulo !== undefined
+                    ? this.titulo.trim()
+                    : undefined,
+
+                url: this.url !== undefined
+                    ? this.url.trim()
+                    : undefined,
+
+                banner: this.banner !== undefined
+                    ? (this.banner === null ? null : this.banner.trim())
+                    : undefined
             }
         });
 
