@@ -1,5 +1,4 @@
-import prisma from '../lib/prisma.js';
-import { PrismaClient } from '../../prisma/generated/prisma/index.js';
+import { prisma } from '../lib/prisma.js';
 
 export const criar = async (req, res) => {
     try {
@@ -13,8 +12,8 @@ export const criar = async (req, res) => {
             titulo,
             resumo,
             conteudoCompleto,
+            tipo,
             dataPublicacao,
-            fonte,
             urlImagem,
             urlNoticia
         } = req.body;
@@ -43,15 +42,15 @@ export const criar = async (req, res) => {
             });
         }
 
-        if (!dataPublicacao || isNaN(Date.parse(dataPublicacao))) {
+        if (!tipo || typeof tipo !== "string" || !tipo.trim()) {
             return res.status(400).json({
-                error: 'O campo "dataPublicacao" deve ser uma data válida!'
+                error: 'O campo "tipo" é obrigatório!'
             });
         }
 
-        if (!fonte || typeof fonte !== "string") {
+        if (!dataPublicacao || isNaN(Date.parse(dataPublicacao))) {
             return res.status(400).json({
-                error: 'O campo "fonte" é obrigatório!'
+                error: 'O campo "dataPublicacao" deve ser uma data válida!'
             });
         }
 
@@ -72,8 +71,8 @@ export const criar = async (req, res) => {
                 titulo: titulo.trim(),
                 resumo,
                 conteudoCompleto,
+                tipo: tipo.trim(),
                 dataPublicacao: new Date(dataPublicacao),
-                fonte,
                 urlImagem: urlImagem || null,
                 urlNoticia
             }
@@ -163,8 +162,8 @@ export const atualizar = async (req, res) => {
                 ...(req.body.titulo && { titulo: req.body.titulo }),
                 ...(req.body.resumo && { resumo: req.body.resumo }),
                 ...(req.body.conteudoCompleto && { conteudoCompleto: req.body.conteudoCompleto }),
+                ...(req.body.tipo && { tipo: req.body.tipo }),
                 ...(req.body.dataPublicacao && { dataPublicacao: new Date(req.body.dataPublicacao) }),
-                ...(req.body.fonte && { fonte: req.body.fonte }),
                 ...(req.body.urlImagem !== undefined && { urlImagem: req.body.urlImagem }),
                 ...(req.body.urlNoticia && { urlNoticia: req.body.urlNoticia }),
             }
@@ -176,6 +175,13 @@ export const atualizar = async (req, res) => {
         });
     } catch (error) {
         console.error('Erro ao atualizar:', error);
+
+        if (error.code === "P2002") {
+            return res.status(409).json({
+                error: "Esta URL de notícia já está cadastrada."
+            });
+        }
+
         return res.status(500).json({ error: 'Erro ao atualizar registro.' });
     }
 };
