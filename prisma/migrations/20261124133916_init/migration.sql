@@ -68,6 +68,39 @@ CREATE TABLE "videos" (
     CONSTRAINT "videos_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "usuarios" (
+    "id" SERIAL NOT NULL,
+    "nome" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "senha" TEXT NOT NULL,
+    "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "atualizadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "usuarios_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "questoes" (
+    "id" SERIAL NOT NULL,
+    "enunciado" TEXT NOT NULL,
+    "banca" TEXT,
+    "ano" INTEGER,
+    "alternativaA" TEXT NOT NULL,
+    "alternativaB" TEXT NOT NULL,
+    "alternativaC" TEXT NOT NULL,
+    "alternativaD" TEXT NOT NULL,
+    "alternativaE" TEXT,
+    "correta" TEXT NOT NULL,
+    "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "atualizadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "questoes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "noticias_titulo_key" ON "noticias"("titulo");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "noticias_urlNoticia_key" ON "noticias"("urlNoticia");
 
@@ -91,6 +124,12 @@ CREATE INDEX "obras_filosofoId_idx" ON "obras"("filosofoId");
 
 -- CreateIndex
 CREATE INDEX "obras_tipo_idx" ON "obras"("tipo");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "videos_titulo_key" ON "videos"("titulo");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "usuarios_email_key" ON "usuarios"("email");
 
 -- AddForeignKey
 ALTER TABLE "filosofos" ADD CONSTRAINT "filosofos_correnteId_fkey" FOREIGN KEY ("correnteId") REFERENCES "correntes_filosoficas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
