@@ -1,7 +1,7 @@
-import * as filosofosModel from "../models/filosofosModel.js";
+import FilosofosModel from "../models/filosofosModel";
 
-export const getFilosofos = async (req, res) => {
-    const filosofos = await filosofosModel.buscarFilosofos();
+export const getAllFilosofos = async (req, res) => {
+    const filosofos = await FilosofosModel.buscarTodos();
 
     res.json({
         total: filosofos.length,
@@ -9,29 +9,19 @@ export const getFilosofos = async (req, res) => {
     });
 }
 
-export const getFilosofoPeloId = async (req, res) => {
+export const getFilosofoById = async (req, res) => {
     const id = Number(req.params.id);
-    
-    const filosofo = await filosofosModel.buscarFilosofoPorId(id);
+    const filosofo = await FilosofosModel.buscaPorId(id);
 
     res.json({
-        filosofo
-    });
-}
-
-export const postFilosofo = async (req, res) => {
-    const filosofo = await filosofosModel.criarFilosofo(req.body);
-
-    res.status(201).json({
-        mensagem: "Filósofo criado com sucesso",
+        mensagem: `Filósofo com o ID ${id} encontrado`,
         filosofo
     });
 }
 
 export const deleteFilosofo = async (req, res) => {
     const id = Number(req.params.id);
-    
-    const filosofo = await filosofosModel.deletarFilosofo(id);
+    const filosofo = await FilosofosModel.deletar(id)
 
     res.json({
         mensagem: "Filósofo deletado com sucesso",
