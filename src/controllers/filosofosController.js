@@ -1,7 +1,7 @@
-import FilosofosModel from "../models/filosofosModel";
+import FilosofosModel from "../models/filosofosModel.js";
 
 export const getAllFilosofos = async (req, res) => {
-    const filosofos = await FilosofosModel.buscarTodos();
+    const filosofos = await FilosofosModel.buscarTodos(req.query);
 
     res.json({
         total: filosofos.length,
@@ -27,4 +27,27 @@ export const deleteFilosofo = async (req, res) => {
         mensagem: "Filósofo deletado com sucesso",
         filosofo
     });
+}
+
+export const postFilosofo = async (req, res) => {
+    const filosofo = new FilosofosModel(req.body);
+    const novoFilosofo = await filosofo.criar();
+    
+    res.status(201).json({
+        mensagem: "Filósofo criado com sucesso",
+        filosofo: novoFilosofo
+    });
+}
+
+    
+export const putFilosofo = async (req, res) => {
+    const filosofo = new FilosofosModel(req.body);
+    const id = Number(req.params.id);
+    const { filosofoAntigo, filosofoNovo } = await filosofo.atualizar(id);
+    
+    res.json({
+        mensagem: "Filósofo atualizado com sucesso",
+        filosofoAntigo,
+        filosofoNovo
+    })
 }
