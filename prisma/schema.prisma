@@ -1,109 +1,123 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "./generated/prisma"
+    provider = "prisma-client-js"
+    output   = "./generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+    provider = "postgresql"
 }
 
 model Noticia {
-  id               Int      @id @default(autoincrement())
-  titulo           String
-  resumo           String   @db.Text
-  conteudoCompleto String   @db.Text
-  dataPublicacao   DateTime @db.Timestamptz(3)
-  tipo             String
-  urlImagem        String?
-  urlNoticia       String   @unique
+    id               Int      @id @default(autoincrement())
+    titulo           String   @unique
+    resumo           String   @db.Text
+    conteudoCompleto String   @db.Text
+    dataPublicacao   DateTime @db.Timestamptz(3)
+    tipo             String
+    urlImagem        String?
+    urlNoticia       String   @unique
 
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @default(now()) @updatedAt
+    criadoEm     DateTime @default(now())
+    atualizadoEm DateTime @default(now()) @updatedAt
 
-  @@index([dataPublicacao])
-  @@index([tipo])
-  @@map("noticias")
+    @@index([dataPublicacao])
+    @@index([tipo])
+    @@map("noticias")
 }
 
 model CorrenteFilosofica {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
-  descricao String? @db.Text
+    id        Int     @id @default(autoincrement())
+    nome      String  @unique
+    descricao String? @db.Text
 
-  filosofos Filosofo[]
-  questoes  Questao[]
+    filosofos Filosofo[]
 
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @default(now()) @updatedAt
+    criadoEm     DateTime @default(now())
+    atualizadoEm DateTime @default(now()) @updatedAt
 
-  @@map("correntes_filosoficas")
+    @@map("correntes_filosoficas")
 }
 
 model Filosofo {
-  id        Int     @id @default(autoincrement())
-  nome      String  @unique
-  biografia String? @db.Text
+    id        Int     @id @default(autoincrement())
+    nome      String  @unique
+    biografia String? @db.Text
 
-  dataNascimento  DateTime?
-  dataFalecimento DateTime?
+    dataNascimento  DateTime?
+    dataFalecimento DateTime?
 
-  urlImagem String?
+    urlImagem String?
 
-  correnteId Int?
-  corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id], onDelete: SetNull)
+    correnteId Int?
+    corrente   CorrenteFilosofica? @relation(fields: [correnteId], references: [id], onDelete: SetNull)
 
-  obras    Obra[]
-  questoes Questao[]
+    obras Obra[]
 
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @default(now()) @updatedAt
+    criadoEm     DateTime @default(now())
+    atualizadoEm DateTime @default(now()) @updatedAt
 
-  @@index([correnteId])
-  @@map("filosofos")
+    @@index([correnteId])
+    @@map("filosofos")
 }
 
 model Obra {
-  id             Int       @id @default(autoincrement())
-  titulo         String
-  resumo         String       @db.Text
-  tipo           String
-  dataPublicacao DateTime? @db.Date
-  dataComposicao DateTime? @db.Date
-  urlImagem      String?
+    id             Int       @id @default(autoincrement())
+    titulo         String
+    resumo         String    @db.Text
+    tipo           String
+    dataPublicacao DateTime? @db.Date
+    dataComposicao DateTime? @db.Date
+    urlImagem      String?
 
-  filosofoId Int
-  filosofo   Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
+    filosofoId Int
+    filosofo   Filosofo @relation(fields: [filosofoId], references: [id], onDelete: Cascade)
 
-  questoes Questao[]
+    criadoEm     DateTime @default(now())
+    atualizadoEm DateTime @default(now()) @updatedAt
 
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @default(now()) @updatedAt
-
-  @@index([filosofoId])
-  @@index([tipo])
-  @@map("obras")
+    @@index([filosofoId])
+    @@index([tipo])
+    @@map("obras")
 }
 
 model Video {
-  id     Int     @id @default(autoincrement())
-  titulo String
-  url    String
-  banner String?
+    id     Int     @id @default(autoincrement())
+    titulo String  @unique
+    url    String
+    banner String?
 
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @default(now()) @updatedAt
+    criadoEm     DateTime @default(now())
+    atualizadoEm DateTime @default(now()) @updatedAt
 
-  @@map("videos")
+    @@map("videos")
 }
 
 model Usuario {
-  id    Int    @id @default(autoincrement())
-  nome  String
-  email String @unique
-  senha String
+    id    Int    @id @default(autoincrement())
+    nome  String
+    email String @unique
+    senha String
 
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt @default(now())
+    criadoEm     DateTime @default(now())
+    atualizadoEm DateTime @default(now()) @updatedAt
 
-  @@map("usuarios")
+    @@map("usuarios")
+}
+
+model Questao {
+    id           Int     @id @default(autoincrement())
+    enunciado    String  @db.Text
+    banca        String?
+    ano          Int?
+    alternativaA String  @db.Text
+    alternativaB String  @db.Text
+    alternativaC String  @db.Text
+    alternativaD String  @db.Text
+    alternativaE String? @db.Text
+    correta      String
+
+    criadoEm     DateTime @default(now())
+    atualizadoEm DateTime @default(now()) @updatedAt
+
+    @@map("questoes")
 }

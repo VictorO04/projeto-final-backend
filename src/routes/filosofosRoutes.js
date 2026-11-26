@@ -1,14 +1,12 @@
 import { Router } from "express";
-import * as filosofosController from "../controllers/filosofosController.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import { getAllFilosofos, getFilosofoById, deleteFilosofo, postFilosofo, putFilosofo } from "../controllers/filosofosController.js";
 
 const router = Router();
 
-router.get("/", filosofosController.getFilosofos);
-router.get("/:id", filosofosController.getFilosofoPeloId);
-router.post("/", filosofosController.postFilosofo);
-
-router.put('/:id', authMiddleware ,filosofosController.postFilosofo)
-router.delete('/:id', authMiddleware, filosofosController.deleteFilosofo)
+router.get("/", getAllFilosofos);
+router.get("/:id", getFilosofoById);
+router.delete("/:id", deleteFilosofo);
+router.post("/", postFilosofo);
+router.put("/:id", putFilosofo);
 
 export default router;

@@ -19,16 +19,6 @@ export const getVideoById = async (req, res) => {
     });
 }
 
-export const postVideo = async (req, res) => {
-    const video = new VideosModel(req.body);
-    const novoVideo = await video.criar();
-
-    res.status(201).json({
-        mensagem: "Vídeo criado com sucesso",
-        video: novoVideo
-    });
-}
-
 export const deleteVideo = async (req, res) => {
     const id = Number(req.params.id);
     const video = await VideosModel.deletar(id)
@@ -36,6 +26,16 @@ export const deleteVideo = async (req, res) => {
     res.json({
         mensagem: "Vídeo deletado com sucesso",
         video
+    });
+}
+
+export const postVideo = async (req, res) => {
+    const video = new VideosModel(req.body);
+    const novoVideo = await video.criar();
+
+    res.status(201).json({
+        mensagem: "Vídeo criado com sucesso",
+        video: novoVideo
     });
 }
 
