@@ -8,7 +8,7 @@ import {
   postResponderQuestao,
   postCorrigirSimulado,
 } from "../controllers/questoesController.js";
-import { verificarToken } from "../middlewares/authMiddleware.js";
+import verificarToken from "../middlewares/authMiddleware.js";
 
 const router = Router();
 router.get("/", getQuestoes);
