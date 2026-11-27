@@ -17,7 +17,7 @@ export const getQuestoes = async (req, res) => {
   });
 };
 
-export const getQuestaoId = async (req, res) => {
+export const getQuestaoById = async (req, res) => {
   const id = Number(req.params.id);
   const questao = await buscarPorId(id);
 
