@@ -8,8 +8,8 @@ export const buscar = (filtros = {}) => {
 
   return prisma.questao.findMany({
     where: {
-    ...(banca && { banca: { contains: banca, mode: 'insensitive' } }),
-    ...(ano && { ano: Number(ano) }),
+      ...(banca && { banca: { contains: banca, mode: "insensitive" } }),
+      ...(ano && { ano: Number(ano) }),
     },
     orderBy: { criadoEm: "desc" },
   });
@@ -24,9 +24,12 @@ export const buscarPorId = async (id) => {
     where: { id },
   });
 
-  if (!questao);
-};
+  if (!questao) {
+    throw new AppError("Questão não encontrada", 404);
+  }
 
+  return questao;
+};
 
 export const criar = async (dados) => {
   const {
@@ -41,19 +44,20 @@ export const criar = async (dados) => {
     correta,
   } = dados;
 
-  if (!enunciado || !alternativaA || alternativaB || alternativaC || alternativaD || !correta) {
+  if (!enunciado || !alternativaA || !alternativaB || !alternativaC || !alternativaD || !correta) {
     throw new AppError(
-      "Enunciado, alternativas A, B, C, D, e a alternativa correta são obrigatórias", 400
+      "Enunciado, alternativas A, B, C, D e a alternativa correta são obrigatórias",
+      400
     );
   }
 
   const letraCorreta = String(correta).trim().toUpperCase();
   if (!ALTERNATIVAS_VALIDAS.includes(letraCorreta)) {
-    throw new AppError("A alternativa correta deve ser A, B, C, D, ou E", 400);
+    throw new AppError("A alternativa correta deve ser A, B, C, D ou E", 400);
   }
 
   if (letraCorreta === "E" && !alternativaE) {
-    throw new AppError("Não é possível marcar 'E' como correta sem preencher a alternativaE", 400)
+    throw new AppError("Não é possível marcar 'E' como correta sem preencher a alternativa E", 400);
   }
 
   return prisma.questao.create({
@@ -82,6 +86,13 @@ export const atualizar = async (id, dados) => {
     }
   }
 
+  const alternativaEFinal =
+    dados.alternativaE !== undefined ? dados.alternativaE : existe.alternativaE;
+
+  if (letraCorreta === "E" && !alternativaEFinal) {
+    throw new AppError("Não é possível marcar 'E' como correta sem preencher a alternativa E", 400);
+  }
+
   return prisma.questao.update({
     where: { id },
     data: {
@@ -89,10 +100,10 @@ export const atualizar = async (id, dados) => {
       banca: dados.banca !== undefined ? dados.banca : existe.banca,
       ano: dados.ano !== undefined ? (dados.ano ? Number(dados.ano) : null) : existe.ano,
       alternativaA: dados.alternativaA ?? existe.alternativaA,
-      alternativaA: dados.alternativaB ?? existe.alternativaB,
-      alternativaA: dados.alternativaC ?? existe.alternativaC,
-      alternativaA: dados.alternativaD ?? existe.alternativaD,
-      alternativaA: dados.alternativaE !== undefined ? dados.alternativaE : existe.alternativaE,
+      alternativaB: dados.alternativaB ?? existe.alternativaB,
+      alternativaC: dados.alternativaC ?? existe.alternativaC,
+      alternativaD: dados.alternativaD ?? existe.alternativaD,
+      alternativaE: alternativaEFinal,
       correta: letraCorreta,
     },
   });
@@ -103,7 +114,7 @@ export const deletar = async (id) => {
   return prisma.questao.delete({ where: { id } });
 };
 
-export const reponderQuestao = async (id, resposta) => {
+export const responderQuestao = async (id, resposta) => {
   const questao = await buscarPorId(id);
 
   if (!resposta) {
@@ -111,6 +122,10 @@ export const reponderQuestao = async (id, resposta) => {
   }
 
   const letraEnviada = String(resposta).trim().toUpperCase();
+  if (!ALTERNATIVAS_VALIDAS.includes(letraEnviada)) {
+    throw new AppError("Alternativa inválida. Escolha entre A, B, C, D ou E", 400);
+  }
+
   const acertou = letraEnviada === questao.correta.toUpperCase();
 
   return {
@@ -162,5 +177,6 @@ export const corrigirSimulado = async (respostasUsuario) => {
     acertos,
     erros: total - acertos,
     porcentagem: Math.round((acertos / total) * 100),
+    detalhes,
   };
 };
