@@ -11,7 +11,7 @@ export const getAllCorrentes = async (req, res) => {
 
 export const getCorrenteById = async (req, res) => {
     const id = Number(req.params.id);
-    const corrente = await CorrentesFilosoficasModel.buscaPorId(id);
+    const corrente = await CorrentesFilosoficasModel.buscarPorId(id);
 
     res.json({
         mensagem: `Corrente filosófica com o ID ${id} encontrado`,
