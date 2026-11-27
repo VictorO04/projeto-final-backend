@@ -5,7 +5,7 @@ import erroMiddleware from "./middlewares/erroMiddleware.js";
 import filosofosRoutes from "./routes/filosofosRoutes.js";
 import noticiasRoutes from "./routes/noticiasRoutes.js";
 import usuariosRoutes from "./routes/usuariosRoutes.js";
-import correntesRoutes from "./routes/correntesRoutes.js";
+import correntesRoutes from "./routes/correntesFilosoficasRoutes.js";
 import videosRoutes from "./routes/videosRoutes.js";
 import questoesRoutes from "./routes/questoesRoutes.js";
 
