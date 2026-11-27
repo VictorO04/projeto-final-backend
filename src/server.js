@@ -7,7 +7,7 @@ import noticiasRoutes from "./routes/noticiasRoutes.js";
 import usuariosRoutes from "./routes/usuariosRoutes.js";
 import correntesRoutes from "./routes/correntesFilosoficasRoutes.js";
 import videosRoutes from "./routes/videosRoutes.js";
-import simuladosRoutes from "./routes/simuladosRoutes.js";
+import questoesRoutes from "./routes/questoesRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -24,7 +24,7 @@ app.use("/api/noticias", noticiasRoutes);
 app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/correntes-filosoficas", correntesRoutes);
 app.use("/api/videos", videosRoutes);
-app.use("/api/simulados", simuladosRoutes);
+app.use("/api/questoes", questoesRoutes);
 
 app.use((req, res) => {
     res.status(404).json({
