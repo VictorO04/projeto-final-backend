@@ -1,9 +1,24 @@
-import express from "express";
-import * as simuladosController from "../controllers/simuladosController.js";
+import { Router } from "express";
+import {
+  getQuestoes,
+  getQuestaoById,
+  postQuestao,
+  putQuestao,
+  deleteQuestao,
+  postResponderQuestao,
+  postCorrigirSimulado,
+} from "../controllers/questoesController.js";
+import { verificarToken } from "../middlewares/authMiddleware.js";
 
-const router = express.Router();
+const router = Router();
+router.get("/", getQuestoes);
+router.post("/corrigir", postCorrigirSimulado); 
+router.get("/:id", getQuestaoById);
+router.post("/:id/responder", postResponderQuestao);
 
-router.get("/", simuladosController.getSimulados);
-router.get("/:id", simuladosController.getSimuladoById);
+
+router.post("/", verificarToken, postQuestao);
+router.put("/:id", verificarToken, putQuestao);
+router.delete("/:id", verificarToken, deleteQuestao);
 
 export default router;
