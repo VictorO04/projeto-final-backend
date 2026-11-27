@@ -13,6 +13,35 @@ export default class noticiasModel {
     }
 
     async criar() {
+
+        // Verifica se já existe uma notícia com a mesma URL ou mesmo Título
+        const noticiaDuplicada = await prisma.noticia.findFirst({
+            where: {
+                OR: [
+                    { urlNoticia: urlNoticia.trim() },
+                    { titulo: { equals: titulo.trim(), mode: 'insensitive' } }
+                ]
+            }
+        });
+
+        if (noticiaDuplicada) {
+            return res.status(409).json({
+                error: "Conflito: já existe uma notícia cadastrada com este título ou URL."
+            });
+        }
+
+        const data = await prisma.noticia.create({
+            data: {
+                titulo: titulo.trim(),
+                resumo,
+                conteudoCompleto,
+                tipo: tipo.trim(),
+                dataPublicacao: new Date(dataPublicacao),
+                urlImagem: urlImagem || null,
+                urlNoticia: urlNoticia.trim()
+            }
+        });
+
         return prisma.noticia.create({
             data: {
                 titulo: this.titulo,
@@ -27,6 +56,33 @@ export default class noticiasModel {
     }
 
     async atualizar() {
+
+        if (req.body.titulo || req.body.urlNoticia) {
+            const condicoes = [];
+
+            if (req.body.urlNoticia) {
+                condicoes.push({ urlNoticia: req.body.urlNoticia.trim() });
+            }
+            if (req.body.titulo) {
+                condicoes.push({ titulo: { equals: req.body.titulo.trim(), mode: 'insensitive' } });
+            }
+
+            const conflito = await prisma.noticia.findFirst({
+                where: {
+                    AND: [
+                        { NOT: { id: parseInt(id) } },
+                        { OR: condicoes }
+                    ]
+                }
+            });
+
+            if (conflito) {
+                return res.status(409).json({
+                    error: "Conflito: já existe outra notícia cadastrada com este título ou URL."
+                });
+            }
+        }
+
         return prisma.noticia.update({
             where: { id: this.id },
             data: {
