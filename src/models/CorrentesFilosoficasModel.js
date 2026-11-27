@@ -48,7 +48,7 @@ export default class CorrentesFilosoficasModel {
             throw new AppError("Nome é obrigatório e precisa ser um texto", 400);
         }
 
-        await FilosofosModel.validarNome(this.nome.trim());
+        await CorrentesFilosoficasModel.validarNome(this.nome.trim());
 
         if (this.descricao !== undefined && this.descricao !== null) {
             if (typeof this.descricao !== "string" || !this.descricao.trim()) {
@@ -71,7 +71,7 @@ export default class CorrentesFilosoficasModel {
             if (typeof this.nome !== "string" || !this.nome.trim()) {
                 throw new AppError("Nome é obrigatório e precisa ser um texto", 400);
             }
-            await FilosofosModel.validarNome(this.nome.trim(), id);
+            await CorrentesFilosoficasModel.validarNome(this.nome.trim(), id);
         }
         if (this.descricao !== undefined && this.descricao !== null) {
             if (typeof this.descricao !== "string" || !this.descricao.trim()) {
