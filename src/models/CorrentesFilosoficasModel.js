@@ -7,23 +7,41 @@ export default class CorrentesFilosoficasModel {
             throw new AppError("Corpo da requisição inválido", 400);
         }
 
+<<<<<<< HEAD
         const { nome, descricao } = body;
 
         this.nome = nome;
+=======
+        const {id, nome, descricao} = body;
+
+        this.id = id;
+        this.nome = nome
+>>>>>>> 2df086054de3b7e24f6412748a6b07ba76cb984b
         this.descricao = descricao;
     }
 
     static buscarTodos() {
+<<<<<<< HEAD
         return prisma.correnteFilosofica.findMany();
     }
 
     static async buscarPorId() {
+=======
+        return prisma.correnteFilosofica.findMany({});
+    }
+
+    static async buscaPorId(id) {
+>>>>>>> 2df086054de3b7e24f6412748a6b07ba76cb984b
         if (!Number.isInteger(id) || id <= 0) {
             throw new AppError("ID precisa ser um inteiro válido", 400);
         }
 
         const corrente = await prisma.correnteFilosofica.findUnique({
+<<<<<<< HEAD
             where: { id }
+=======
+            where: { id },
+>>>>>>> 2df086054de3b7e24f6412748a6b07ba76cb984b
         });
         
         if (!corrente) {
@@ -32,6 +50,7 @@ export default class CorrentesFilosoficasModel {
         
         return corrente;
     }
+<<<<<<< HEAD
 
     static async deletar(id) {
         const corrente = await CorrentesFilosoficasModel.buscarPorId(id);
@@ -100,4 +119,6 @@ export default class CorrentesFilosoficasModel {
             throw new AppError("Já existe uma corrente filosófica com esse nome", 409);
         }
     }
+=======
+>>>>>>> 2df086054de3b7e24f6412748a6b07ba76cb984b
 }

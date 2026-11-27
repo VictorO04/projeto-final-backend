@@ -1,16 +1,25 @@
 import CorrentesFilosoficasModel from "../models/CorrentesFilosoficasModel.js";
 
 export const getAllCorrentes = async (req, res) => {
+<<<<<<< HEAD
     const correntes = await CorrentesFilosoficasModel.buscarTodos(req.query);
 
     res.json({
         total: correntes.length,
         correntes
+=======
+    const correntesFilosoficas = await CorrentesFilosoficasModel.buscarTodos();
+
+    res.json({
+        total: correntesFilosoficas.length,
+        correntesFilosoficas
+>>>>>>> 2df086054de3b7e24f6412748a6b07ba76cb984b
     });
 }
 
 export const getCorrenteById = async (req, res) => {
     const id = Number(req.params.id);
+<<<<<<< HEAD
     const corrente = await CorrentesFilosoficasModel.buscaPorId(id);
 
     res.json({
@@ -50,4 +59,12 @@ export const putCorrente = async (req, res) => {
         correnteAntiga,
         correnteNova
     })
+=======
+    const correnteFilosofica = await CorrentesFilosoficasModel.buscaPorId(id);
+
+    res.json({
+        mensagem: `Corrente filosófica com o ID ${id} encontrada`,
+        correnteFilosofica
+    });
+>>>>>>> 2df086054de3b7e24f6412748a6b07ba76cb984b
 }
