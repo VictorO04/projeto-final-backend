@@ -22,3 +22,5 @@ router.put("/:id", verificarToken, putQuestao);
 router.delete("/:id", verificarToken, deleteQuestao);
 
 export default router;
+
+
