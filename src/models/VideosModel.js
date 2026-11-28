@@ -7,12 +7,12 @@ export default class VideosModel {
             throw new AppError("Corpo da requisição inválido", 400);
         }
 
-        const { id = null, titulo, url, banner = null } = body;
+        const { id, titulo, url, banner } = body;
         
         this.id = id;
         this.titulo = titulo;
         this.url = url;
-        this.banner = banner;
+        this.banner = banner; 
     }
 
     static buscarTodos() {
@@ -46,30 +46,17 @@ export default class VideosModel {
     }
     
     async criar() {
-
-        if (typeof this.titulo !== "string") {
-            throw new AppError("Título precisa ser uma string", 400);
+        if (typeof this.nome !== "string" || !this.nome.trim()) {
+            throw new AppError("Título é obrigatório e precisa ser um texto", 400);
         }
 
-        if (!this.titulo.trim()) {
-            throw new AppError("Título é obrigatório", 400);
-        }
-
-        if (typeof this.url !== "string") {
-            throw new AppError("URL precisa ser uma string", 400);
-        }
-
-        if (!this.url.trim()) {
-            throw new AppError("URL é obrigatório", 400);
+        if (typeof this.url !== "string" || !this.url.trim()) {
+            throw new AppError("URL é obrigatório e precisa ser um texto", 400);
         }
 
         if (this.banner !== undefined && this.banner !== null) {
-            if (typeof this.banner !== "string") {
-                throw new AppError("Banner precisa ser uma string", 400);
-            }
-
-            if (!this.banner.trim()) {
-                throw new AppError("Banner não pode ser vazio", 400);
+            if (typeof this.banner !== "string" || !this.banner.trim()) {
+                throw new AppError("Banner precisa ser um texto e não pode ser vazio", 400);
             }
         }
 
@@ -77,7 +64,7 @@ export default class VideosModel {
             data: {
                 titulo: this.titulo.trim(),
                 url: this.url.trim(),
-                banner: this.banner?.trim() || null
+                banner: this.url?.trim() ?? null
             }
         });
 
@@ -86,32 +73,20 @@ export default class VideosModel {
 
     async atualizar(id) {
         if (this.titulo !== undefined) {
-            if (typeof this.titulo !== "string") {
-                throw new AppError("Título precisa ser uma string", 400);
-            }
-
-            if (!this.titulo.trim()) {
-                throw new AppError("Título é obrigatório", 400);
+            if (typeof this.nome !== "string" || !this.nome.trim()) {
+                throw new AppError("Título é obrigatório e precisa ser um texto", 400);
             }
         }
 
         if (this.url !== undefined) {
-            if (typeof this.url !== "string") {
-                throw new AppError("URL precisa ser uma string", 400);
-            }
-
-            if (!this.url.trim()) {
-                throw new AppError("URL é obrigatório", 400);
+            if (typeof this.url !== "string" || !this.url.trim()) {
+                throw new AppError("URL é obrigatório e precisa ser um texto", 400);
             }
         }
 
         if (this.banner !== undefined && this.banner !== null) {
-            if (typeof this.banner !== "string") {
-                throw new AppError("Banner precisa ser uma string", 400);
-            }
-
-            if (!this.banner.trim()) {
-                throw new AppError("Banner não pode ser vazio", 400);
+            if (typeof this.banner !== "string" || !this.banner.trim()) {
+                throw new AppError("Banner precisa ser um texto e não pode ser vazio", 400);
             }
         }
 
@@ -119,17 +94,9 @@ export default class VideosModel {
         const videoNovo = await prisma.video.update({
             where: { id },
             data: {
-                titulo: this.titulo !== undefined
-                    ? this.titulo.trim()
-                    : undefined,
-
-                url: this.url !== undefined
-                    ? this.url.trim()
-                    : undefined,
-
-                banner: this.banner !== undefined
-                    ? (this.banner === null ? null : this.banner.trim())
-                    : undefined
+                titulo: this.titulo?.trim(), 
+                url: this.url?.trim(),
+                banner: this.banner === null ? null : this.banner?.trim()
             }
         });
 
