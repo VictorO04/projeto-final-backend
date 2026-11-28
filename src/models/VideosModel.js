@@ -46,7 +46,7 @@ export default class VideosModel {
     }
     
     async criar() {
-        if (typeof this.nome !== "string" || !this.nome.trim()) {
+        if (typeof this.titulo !== "string" || !this.titulo.trim()) {
             throw new AppError("Título é obrigatório e precisa ser um texto", 400);
         }
 
@@ -73,7 +73,7 @@ export default class VideosModel {
 
     async atualizar(id) {
         if (this.titulo !== undefined) {
-            if (typeof this.nome !== "string" || !this.nome.trim()) {
+            if (typeof this.titulo !== "string" || !this.titulo.trim()) {
                 throw new AppError("Título é obrigatório e precisa ser um texto", 400);
             }
         }
