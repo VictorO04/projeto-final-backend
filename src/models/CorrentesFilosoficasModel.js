@@ -17,7 +17,7 @@ export default class CorrentesFilosoficasModel {
         return prisma.correnteFilosofica.findMany();
     }
 
-    static async buscarPorId() {
+    static async buscarPorId(id) {
         if (!Number.isInteger(id) || id <= 0) {
             throw new AppError("ID precisa ser um inteiro válido", 400);
         }
